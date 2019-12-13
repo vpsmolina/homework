@@ -1,0 +1,42 @@
+<!--<h2>{{user.name | uppercase}} Details</h2>-->
+<div class="filter">
+  <label>
+    <input type="string" placeholder="Name" [(ngModel)]="searchName">
+  </label>
+</div>
+<table>
+  <tr><th>Имя</th><th>Фамилия</th><th>Отчество</th><th>День рождения</th><th>Средний балл</th><th>Del</th></tr>
+  <tr *ngFor="let user of dataTable.users | usersFilter:searchName let i = index" [class.filter]="user.coefficient < 3" [class.searchN]="searchName" >
+    <td>{{user.name}}</td>
+    <td>{{user.surname}}</td>
+    <td>{{user.middlename}}</td>
+    <td>{{user.birthday | date: "longDate"}}</td>
+    <td>{{user.coefficient}}</td>
+    <td><button class="rm" (click)="removeUser(user.id)"></button></td>
+  </tr>
+</table>
+<!--<input [formControl]="nameControl">-->
+
+<fieldset [formGroup]="fullnameControl">
+  <label> Имя
+    <input formControlName="name">
+    <div class="alert"></div>
+  </label> Фамилия
+  <label>
+    <input formControlName="surname">
+    <div class="alert"></div>
+  </label>
+  <label> Отчество
+    <input formControlName="middlename">
+    <div class="alert"></div>
+  </label>
+  <label> День рождения
+    <input formControlName="birthday">
+    <div class="alert"></div>
+  </label>
+  <label> Средний балл
+    <input formControlName="coefficient">
+    <div class="alert"></div>
+  </label>
+</fieldset>
+<button>Add User</button>
