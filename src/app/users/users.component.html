@@ -4,7 +4,7 @@
     <input type="string" placeholder="Name" [(ngModel)]="searchName">
   </label>
 </div>
-<table>
+<!--<table>
   <tr><th>Имя</th><th>Фамилия</th><th>Отчество</th><th>День рождения</th><th>Средний балл</th><th>Del</th></tr>
   <tr *ngFor="let user of dataTable.users | usersFilter:searchName let i = index" [class.filter]="user.coefficient < 3" [class.searchN]="searchName" >
     <td>{{user.name}}</td>
@@ -14,29 +14,43 @@
     <td>{{user.coefficient}}</td>
     <td><button class="rm" (click)="removeUser(user.id)"></button></td>
   </tr>
+</table>-->
+<table>
+  <tr><th>Имя</th><th>Фамилия</th><th>Отчество</th><th>День рождения</th><th>Средний балл</th><th>Del</th></tr>
+  <tr *ngFor="let user of dataTable.users | usersFilter:searchName let i = index" [class.score]="user.coefficient < 3" [class.searchN]="searchName" >
+    <!--<td><input formControlName="{{user.name}}}"></td>-->
+    <td><input [value]="user.name"></td>
+    <td><input [value]="user.surname"></td>
+    <td><input [value]="user.middlename"></td>
+    <td><input [value]="user.birthday | date: 'longDate'"></td>
+    <td><input [value]="user.coefficient"></td>
+    <td><button class="rm" (click)="removeUser(user.id)"></button></td>
+  </tr>
 </table>
-<!--<input [formControl]="nameControl">-->
 
-<fieldset [formGroup]="fullnameControl">
-  <label> Имя
-    <input formControlName="name">
+<form [formGroup]="fullnameControl" (submit)="onSubmit()">
+  <fieldset formGroupName="fullname">
+    <label> Имя
+    <input formControlName="name" type="string">
     <div class="alert"></div>
-  </label> Фамилия
-  <label>
-    <input formControlName="surname">
+    </label>
+    <label> Фамилия
+    <input formControlName="surname" type="string">
     <div class="alert"></div>
-  </label>
-  <label> Отчество
-    <input formControlName="middlename">
+    </label>
+    <label> Отчество
+    <input formControlName="middlename" type="string">
     <div class="alert"></div>
-  </label>
+    </label>
+  </fieldset>
   <label> День рождения
-    <input formControlName="birthday">
+    <input formControlName="birthday" type="date">
     <div class="alert"></div>
   </label>
   <label> Средний балл
-    <input formControlName="coefficient">
+    <input formControlName="coefficient" type="number">
     <div class="alert"></div>
   </label>
-</fieldset>
-<button>Add User</button>
+  <button type="submit">Add User</button>
+</form>
+
