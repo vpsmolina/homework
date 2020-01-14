@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { DatatableService } from "./users/datatable.service";
+
 
 @Component({
   selector: "app-root",
@@ -9,10 +9,4 @@ import { DatatableService } from "./users/datatable.service";
 })
 export class AppComponent {
   title = "Journal";
-  constructor(private datatableService: DatatableService) {
-  }
-/*  get runChangeDetection(): boolean  {
-    console.log("Checking the view");
-    return;
-  }*/
 }

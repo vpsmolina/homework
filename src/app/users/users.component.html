@@ -9,24 +9,29 @@
 <div class="users__table">
   <div class="users__table-header">
     <div class="users__table-header-column">
+    <button class="users__sort-button" (click)="sortUser('surname')" ></button>
       Фамилия
     </div>
     <div class="users__table-header-column">
+      <button class="users__sort-button" (click)="sortUser('name')" ></button>
       Имя
     </div>
     <div class="users__table-header-column">
+      <button class="users__sort-button" (click)="sortUser('middlename')" ></button>
       Отчество
     </div>
     <div class="users__table-header-column">
+      <button class="users__sort-button" (click)="sortUser('birthday')" ></button>
       День рождения
     </div>
     <div class="users__table-header-column">
+      <button class="users__sort-button" (click)="sortUser('coefficient')" ></button>
       Средний балл
     </div>
     <div class="users__table-header-column"></div>
   </div>
   <div class="users__table-body" >
-    <div *ngFor="let user of dataTable.users | usersFilter: searchName; trackBy: trackByFn"
+    <div *ngFor="let user of users | usersFilter: searchName; trackBy: trackByFn"
          class="users__table-body-row"
          [class.score]="user.coefficient < 3"
          [class.searchN]="searchName"
