@@ -1,0 +1,58 @@
+<div class="users__form">
+  <form [formGroup]="fullNameControl" novalidate
+        (submit)="onSubmit()"
+  >
+    <div formGroupName="fullName">
+      <label> Фамилия</label>
+      <div class="users__form-field">
+        <input formControlName="surname"
+               type="string"
+        >
+        <div class="alert"></div>
+      </div>
+
+      <label>Имя</label>
+      <div class="users__form-field">
+          <input formControlName="name"
+                 type="string"
+          >
+      </div>
+
+      <label> Отчество</label>
+      <div class="users__form-field">
+        <input formControlName="middleName"
+               type="string"
+        >
+      </div>
+      <div class="users__form-field-alert"
+           *ngIf="fullNameControl.controls['fullName'].invalid && fullNameControl.controls['fullName'].touched">
+        Не указано ФИО.
+      </div>
+    </div>
+
+    <label>День рождения</label>
+    <div class="users__form-field">
+      <input formControlName="birthday"
+             type="date"
+      >
+      <div class="users__form-field-alert"
+           *ngIf="fullNameControl.controls['birthday'].invalid && fullNameControl.controls['birthday'].touched">
+        Студент должен быть старше 10 лет.
+      </div>
+    </div>
+
+    <label>Средний балл</label>
+    <div class="users__form-field">
+      <input formControlName="coefficient"
+             type="number"
+      >
+      <div class="users__form-field-alert"
+           *ngIf="fullNameControl.controls['coefficient'].invalid && fullNameControl.controls['coefficient'].touched">
+        Не указан средний балл.
+      </div>
+    </div>
+    <button class="transparent-button"
+            routerLink="/">Назад</button>
+    <button class="transparent-button" type="submit">Добавить</button>
+  </form>
+</div>

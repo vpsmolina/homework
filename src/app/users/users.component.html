@@ -1,56 +1,77 @@
 <!--<h2>{{user.name | uppercase}} Details</h2>-->
-<div class="filter">
+<div class="users__filter">
   <label>
-    <input type="string" placeholder="Name" [(ngModel)]="searchName">
+    <input type="text" placeholder="Введите фамилию" [(ngModel)]="searchName">
   </label>
 </div>
-<!--<table>
-  <tr><th>Имя</th><th>Фамилия</th><th>Отчество</th><th>День рождения</th><th>Средний балл</th><th>Del</th></tr>
-  <tr *ngFor="let user of dataTable.users | usersFilter:searchName let i = index" [class.filter]="user.coefficient < 3" [class.searchN]="searchName" >
-    <td>{{user.name}}</td>
-    <td>{{user.surname}}</td>
-    <td>{{user.middlename}}</td>
-    <td>{{user.birthday | date: "longDate"}}</td>
-    <td>{{user.coefficient}}</td>
-    <td><button class="rm" (click)="removeUser(user.id)"></button></td>
-  </tr>
-</table>-->
-<table>
-  <tr><th>Имя</th><th>Фамилия</th><th>Отчество</th><th>День рождения</th><th>Средний балл</th><th>Del</th></tr>
-  <tr *ngFor="let user of dataTable.users | usersFilter:searchName let i = index" [class.score]="user.coefficient < 3" [class.searchN]="searchName" >
-    <!--<td><input formControlName="{{user.name}}}"></td>-->
-    <td><input [value]="user.name"></td>
-    <td><input [value]="user.surname"></td>
-    <td><input [value]="user.middlename"></td>
-    <td><input [value]="user.birthday | date: 'longDate'"></td>
-    <td><input [value]="user.coefficient"></td>
-    <td><button class="rm" (click)="removeUser(user.id)"></button></td>
-  </tr>
-</table>
+<button class="transparent-button" (click)="_editMode = !_editMode">Редактировать</button>
 
-<form [formGroup]="fullnameControl" (submit)="onSubmit()">
-  <fieldset formGroupName="fullname">
-    <label> Имя
-    <input formControlName="name" type="string">
-    <div class="alert"></div>
-    </label>
-    <label> Фамилия
-    <input formControlName="surname" type="string">
-    <div class="alert"></div>
-    </label>
-    <label> Отчество
-    <input formControlName="middlename" type="string">
-    <div class="alert"></div>
-    </label>
-  </fieldset>
-  <label> День рождения
-    <input formControlName="birthday" type="date">
-    <div class="alert"></div>
-  </label>
-  <label> Средний балл
-    <input formControlName="coefficient" type="number">
-    <div class="alert"></div>
-  </label>
-  <button type="submit">Add User</button>
-</form>
+<div class="users__table">
+  <div class="users__table-header">
+    <div class="users__table-header-column">
+      Фамилия
+    </div>
+    <div class="users__table-header-column">
+      Имя
+    </div>
+    <div class="users__table-header-column">
+      Отчество
+    </div>
+    <div class="users__table-header-column">
+      День рождения
+    </div>
+    <div class="users__table-header-column">
+      Средний балл
+    </div>
+    <div class="users__table-header-column"></div>
+  </div>
+  <div class="users__table-body" >
+    <div *ngFor="let user of dataTable.users | usersFilter: searchName; trackBy: trackByFn"
+         class="users__table-body-row"
+         [class.score]="user.coefficient < 3"
+         [class.searchN]="searchName"
+         appHover
+    >
+      <div class="users__table-body-column">
+        <div *ngIf="!_editMode; else surnameInput" class="users__table-readonly">{{user.surname}}</div>
+        <ng-template #surnameInput>
+          <input class="users__table-input" [value]="user.surname" type="text">
+        </ng-template>
+      </div>
+      <div class="users__table-body-column" >
+        <div *ngIf="!_editMode; else nameInput" class="users__table-readonly">{{user.name}}</div>
+        <ng-template #nameInput>
+          <input class="users__table-input" [value]="user.name" type="text">
+        </ng-template>
+      </div>
+      <div class="users__table-body-column">
+        <div *ngIf="!_editMode; else middleNameInput" class="users__table-readonly">{{user.middleName}}</div>
+        <ng-template #middleNameInput>
+        <input class="users__table-input" [value]="user.middleName" type="text">
+        </ng-template>
+      </div>
+      <div class="users__table-body-column">
+        <div *ngIf="!_editMode; else birthdayInput" class="users__table-readonly">{{user.birthday | date: 'longDate'}}</div>
+        <ng-template #birthdayInput>
+        <input class="users__table-input" [value]="user.birthday | date: 'longDate'">
+        </ng-template>
+      </div>
+      <div class="users__table-body-column">
+        <div *ngIf="!_editMode; else coefficientInput" class="users__table-readonly">{{user.coefficient}}</div>
+        <ng-template #coefficientInput>
+        <input class="users__table-input" [value]="user.coefficient" type="text">
+      </ng-template>
+      </div>
+      <div class="users__table-body-column">
+        <button class="users__remove-button" (click)="removeUser(user.id)"></button>
+      </div>
+      <div class="users__table-body-column">
+        <button class="users__edit-button" (click)="editUser(user.id)" ></button>
+
+      </div>
+    </div>
+  </div>
+  <button class="transparent-button" type="submit"
+          routerLink="/form/create">Добавить</button>
+</div>
 
