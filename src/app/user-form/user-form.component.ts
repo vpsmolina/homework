@@ -30,7 +30,7 @@ export class UserFormComponent implements OnInit {
       coefficient: new FormControl(null, [Validators.required]),
     });
   }
-  @Output()
+  
   public onSubmit(): void {
     const controls = this.fullNameControl.controls;
     if (this.fullNameControl.invalid) {
