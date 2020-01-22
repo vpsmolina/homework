@@ -32,7 +32,7 @@
       </div>
       <div class="users__form-field-alert"
            *ngIf="fullNameControl.controls['fullName'].invalid && fullNameControl.controls['fullName'].touched">
-        Не указано ФИО.
+        No full name.
       </div>
     </div>
 
@@ -45,7 +45,7 @@
       </label>
       <div class="users__form-field-alert"
            *ngIf="fullNameControl.controls['birthday'].invalid && fullNameControl.controls['birthday'].touched">
-        Студент должен быть старше 10 лет.
+        The student must be over 10 years old.
       </div>
     </div>
 
@@ -62,8 +62,8 @@
       </div>
     </div>
     <button class="transparent-button"
-            routerLink="/">Назад</button>
-    <button class="transparent-button" type="submit">Добавить</button>
+            routerLink="/">Back</button>
+    <button class="transparent-button" type="submit">Add User</button>
 
   </form>
 </div>
