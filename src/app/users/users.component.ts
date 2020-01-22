@@ -1,68 +1,67 @@
-import { Component, Input, OnInit } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { DataTable } from "./datatable";
+import { ChangeDetectionStrategy, Component, OnInit, Output } from "@angular/core";
+import { USERS } from "./datatable";
 import { User } from "./user";
 
 
 
 @Component({
   selector: "app-users",
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: "./users.component.html",
-  styleUrls: ["./users.component.less"]
+  styleUrls: ["./users.component.less"],
 })
 export class UsersComponent implements OnInit {
-  private searchName: string = "";
-  fullnameControl: FormGroup;
-  fullname: FormGroup;
-  constructor(private dataTable: DataTable) {
+  @Output() users = USERS;
+  public type = true;
+  public index: number;
+  public target: string;
+  @Output() searchName: string = "";
+  @Output() _editMode: boolean = false;
+
+
+  public removeUser( id: number): void {
+    this.users = this.users.filter(t => t.id !== id);
   }
-  ngOnInit(): void {
-    this.initForm();
-  }
-  initForm(): void {
-    this.fullnameControl = new FormGroup({
-      fullname: new FormGroup({
-        name: new FormControl("", [Validators.required]),
-        surname: new FormControl("", [Validators.required]),
-        middlename: new FormControl("", [Validators.required]),
-      }/*, {validators: nameValidator}*/),
-      birthday: new FormControl("", [Validators.required, dateValidator]),
-      coefficient: new FormControl("", [Validators.required]),
-    });
-  }
-  onSubmit(): void {
-    const controls = this.fullnameControl.controls;
-    if (this.fullnameControl.invalid) {
-      Object.keys(controls)
-        .forEach(controlName => controls[controlName].markAsTouched());
-      return;
+
+  public sortUser(field: string, type?: string): void {
+    if (type && type === "true") {
+      this.type = true;
+    } else if (type && type === "false") {
+      this.type = false;
     }
-    console.log(this.fullnameControl.get("fullname.name").value);
-    this.dataTable.users.push(this.fullnameControl.value);
+    this.users.sort((a, b): number => {
+      if (this.type) {
+        if (a[field] > b[field]) {
+          return 1;
+        }
+        if (a[field] < b[field]) {
+          return -1;
+        }
+      } else {
+        if (a[field] > b[field]) {
+          return -1;
+        }
+        if (a[field] < b[field]) {
+          return 1;
+        }
+        return 0;
+      }
+    });
+    this.type = !this.type;
   }
-  removeUser(id: number): void {
-    this.dataTable.removeUser(id);
+
+  public trackByFn(index: number, user: User): number {
+    return user.id;
+  }
+
+  public setUserId(index: number): void {
+    this.index = index;
+  }
+
+  ngOnInit(): void {
   }
 }
-// tslint:disable-next-line:typedef
-function dateValidator (formControl: FormControl) {
-  const nday = new Date;
-  const bday = formControl.value.split("-")[0];
-  if ( bday > (nday.getFullYear() - 10) ) {
-    return {dateValidator: {message: "Not found"}};
-  }
-  return null;
-}
-// tslint:disable-next-line:typedef
-function nameValidator(control: FormGroup) {
-  const firstname = control.get("name").value;
-  const lastname = control.get("surname").value;
-  const middlename = control.get("middlename").value;
-  if (firstname.length > 3) {
-    return {nameValidator: {message: "Not found"}};
-  }
-  return null;
-}
+
 
 
 
