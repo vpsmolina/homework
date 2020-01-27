@@ -1,36 +1,32 @@
 import { NgModule } from "@angular/core";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
-import { RouterModule } from "@angular/router";
-
-import { AppRoutingModule, routing } from "./app-routing.module";
-import { AppComponent } from "./app.component";
-
-
-import { CommonModule } from "./common/common.module";
+import { AppRoutingModule } from "./app-routing.module";
+import { DataService } from "./data-table/data.service";
+import { DataTableService } from "./data-table/datatable.service";
+import { UsersService } from "./data-table/users.service";
 import { NotFoundComponent } from "./not-found/not-found.component";
-import { UserFormComponent } from "./user-form/user-form.component";
-import { UsersHttpComponent } from "./users-http/users-http.component";
-import { UsersComponent } from "./users/users.component";
+import { UsersRootComponent } from "./users-root/users-root.component";
+import { UsersModule } from "./users/users.module";
 
 @NgModule({
   declarations: [
-    AppComponent,
-    UsersComponent,
-    UserFormComponent,
-    UsersHttpComponent,
+    UsersRootComponent,
     NotFoundComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule,
-    ReactiveFormsModule,
-    RouterModule,
-    routing,
-    CommonModule,
+    UsersModule,
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [UsersService, {
+    provide: DataService, deps: [UsersService], useFactory: (usersService) => {
+      if (usersService.debug()) {
+        return new DataTableService();
+      }
+      return;
+    }
+  }],
+
+  bootstrap: [UsersRootComponent]
 })
 export class AppModule { }

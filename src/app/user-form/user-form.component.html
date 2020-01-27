@@ -1,69 +1,69 @@
-<div class="users__form">
-  <form [formGroup]="fullNameControl" novalidate
-        (submit)="onSubmit()"
-  >
-    <div formGroupName="fullName">
-
-      <div class="users__form-field">
-        <label> Surname
-          <input formControlName="surname"
-                 type="string"
-          >
-        </label>
-        <div class="alert"></div>
-      </div>
-
-
-      <div class="users__form-field">
-        <label> Name
-          <input formControlName="name"
-                 type="string"
-          >
-        </label>
-      </div>
-
-
-      <div class="users__form-field">
-        <label> Middle name
-          <input formControlName="middleName"
-                 type="string"
-          >
-        </label>
-      </div>
-      <div class="users__form-field-alert"
-           *ngIf="fullNameControl.controls['fullName'].invalid && fullNameControl.controls['fullName'].touched">
-        No full name.
-      </div>
-    </div>
-
-
-    <div class="users__form-field">
-      <label>Birthday
-        <input formControlName="birthday"
-               type="date"
+<div class="users__form visible">
+  <div class="users__form-dialog">
+    <div class="users__form-content">
+      <div class="users__form-body">
+        <form *ngIf="action; else confirm" noValidate [formGroup]="formUser" class="edit-student"
+              (ngSubmit)="onSubmit()"
         >
-      </label>
-      <div class="users__form-field-alert"
-           *ngIf="fullNameControl.controls['birthday'].invalid && fullNameControl.controls['birthday'].touched">
-        The student must be over 10 years old.
+          <div class="form-group" formGroupName="fullName">
+
+            <div class="form-control">
+              <label> Surname </label>
+                <input fullName="surname" formControlName="surname"
+                       type="string"
+                >
+              <div class="alert"></div>
+            </div>
+
+
+            <div class="form-control">
+              <label> Name</label>
+                <input fullName="name" formControlName="name"
+                       type="string"
+                >
+            </div>
+            <div class="form-control">
+              <label> Middle name</label>
+                <input fullName="middleName" formControlName="middleName"
+                       type="string"
+                >
+            </div>
+            <div class="tooltiptext"
+                 *ngIf="formUser.controls['fullName'].invalid && formUser.controls['fullName'].touched">
+              No full name.
+            </div>
+          </div>
+
+          <div class="form-control">
+            <label>Birthday</label>
+              <input formControlName="birthday"
+                     type="date">
+            <div class="tooltiptext"
+                 *ngIf="formUser.controls['birthday'].invalid && formUser.controls['birthday'].touched">
+              The student must be over 10 years old.
+            </div>
+          </div>
+
+          <div class="form-control">
+            <label>Coefficient </label>
+              <input formControlName="coefficient"
+                     type="number">
+            <div class="tooltiptext"
+                 *ngIf="formUser.controls['coefficient'].invalid && formUser.controls['coefficient'].touched">
+              Не указан средний балл.
+            </div>
+          </div>
+
+          <button class="transparent-button"
+                  routerLink="/">Back</button>
+          <button class="transparent-button" type="submit">Add User</button>
+        </form>
+        <ng-template #confirm>
+          <p>Are you sure you want to delete?</p>
+          <button class="button primary" (click)="confirmation()">Yes</button><button class="button primary" (click)="hideForm()">Cancel</button>
+        </ng-template>
       </div>
     </div>
 
-
-    <div class="users__form-field">
-      <label>Coefficient
-        <input formControlName="coefficient"
-               type="number"
-        >
-      </label>
-      <div class="users__form-field-alert"
-           *ngIf="fullNameControl.controls['coefficient'].invalid && fullNameControl.controls['coefficient'].touched">
-        Не указан средний балл.
-      </div>
-    </div>
-    <button class="transparent-button"
-            routerLink="/">Back</button>
-    <button class="transparent-button" type="submit">Add User</button>
-
-  </form>
+  </div>
 </div>

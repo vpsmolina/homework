@@ -1,3 +1,14 @@
+.title__background {
+  background: bisque;
+  height: 40px;
+  margin: 0 0 .5rem;
+}
+.title {
+  display: flex;
+  width: 100%;
+  font-size: 180%;
+  letter-spacing: 1px;
+}
 .score {  background: bisque;}
 
 .rm {
@@ -99,9 +110,14 @@ fieldset {width: 500px;}
     display: inline-block;
     padding: 3px;
     transform: rotate(-135deg);
-    -webkit-transform: rotate(-135deg);
     margin: 0 10px 0 0;
+  }
+  &__edit-button {
 
+  }
+  &__edit-button:hover{
+    background-color: #805d7c;
+    color: #fff;
   }
 }
 
@@ -127,3 +143,11 @@ fieldset {width: 500px;}
   letter-spacing: 1px;
   transition: all 0.3s ease-out;
 }
+.transparent-button:hover{
+  background-color: #805d7c;
+  color: #fff;
+}
+.popUp {
+  padding: 2rem 0;
+}
+

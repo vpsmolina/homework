@@ -4,11 +4,13 @@ import { NotFoundComponent } from "./not-found/not-found.component";
 import { UserFormComponent } from "./user-form/user-form.component";
 import { UsersComponent } from "./users/users.component";
 
-
+const childRoutes: Routes = [
+  { path: "edit/:id", component: UserFormComponent },
+  { path: "delete/:id", component: UserFormComponent },
+  { path: "add", component: UserFormComponent },
+];
 const routes: Routes = [
-  { path: "", component: UsersComponent },
-  { path: "form/edit", component: UserFormComponent },
-  { path: "form/create", component: UserFormComponent },
+  { path: "", component: UsersComponent, children: childRoutes },
   { path: "**", component: NotFoundComponent}];
 
 export const routing = RouterModule.forRoot(routes);

@@ -1,7 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnInit, Output } from "@angular/core";
-import { USERS } from "./datatable";
-import { User } from "./user";
-
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { DataService } from "../data-table/data.service";
+import { User } from "../data-table/user";
+import { UserData } from "../data-table/userdata";
+import { UserEvents } from "../data-table/userevents";
+import { UsersService } from "../data-table/users.service";
+import { UsersList } from "../data-table/userslist";
+import { UserFormComponent } from "../user-form/user-form.component";
 
 
 @Component({
@@ -11,16 +16,26 @@ import { User } from "./user";
   styleUrls: ["./users.component.less"],
 })
 export class UsersComponent implements OnInit {
-  @Output() users = USERS;
   public type = true;
   public index: number;
   public target: string;
-  @Output() searchName: string = "";
-  @Output() _editMode: boolean = false;
+  public title: string = "Journal";
+  public searchName: string = "";
+  public action: UserEvents;
+  public user: User;
+  public users: User[] = UsersList;
+  public isDisplayed: boolean;
 
-
-  public removeUser( id: number): void {
-    this.users = this.users.filter(t => t.id !== id);
+  constructor(@Inject(DataService) private dataService: UserData,
+              private router: Router,
+              private usersService: UsersService) {
+  }
+  public hideForm(displayed: boolean): void {
+    this.isDisplayed = displayed;
+  }
+  public addForm(displayed: boolean): void {
+    this.isDisplayed = !displayed;
+    this.action = UserEvents.add;
   }
 
   public sortUser(field: string, type?: string): void {
@@ -53,12 +68,61 @@ export class UsersComponent implements OnInit {
   public trackByFn(index: number, user: User): number {
     return user.id;
   }
-
-  public setUserId(index: number): void {
-    this.index = index;
+  public deleteUser(_id: string): void {
+    this.usersService.debug() ? this.router.navigate([`delete/${_id}`], {queryParams: {debug: true}}) : this.router.navigate([`delete/${_id}`]);
   }
-
+  public addUser(): void {
+    this.usersService.debug() ? this.router.navigate([`add`], {queryParams: {debug: true}}) : this.router.navigate([`add`]);
+  }
+  public editUser(_id: string): void {
+    this.usersService.debug() ? this.router.navigate([`edit/${_id}`], {queryParams: {debug: true}}) : this.router.navigate([`edit/${_id}`]);
+  }
+  public actions(userform: UserFormComponent): void {
+    switch (UserEvents[userform.piece]) {
+      case 1: {
+        if (userform.confirm) {
+          this.dataService.createUser(userform.data).subscribe(() => {
+            this.users.push(userform.data);
+          });
+        }
+        break;
+      }
+      case 2: {
+        if (userform.confirm) {
+          this.dataService.updateUser(userform.userId, userform.data).subscribe(() => {
+            this.users.forEach(user => {
+              if (user._id === userform.userId) {
+                user.surname = userform.data.surname;
+                user.name = userform.data.name;
+                user.middleName = userform.data.middleName;
+                user.birthday = userform.data.birthday;
+                user.coefficient = userform.data.coefficient;
+              }
+            });
+          });
+        }
+        break;
+      }
+      case 0: {
+        if (userform.confirm) {
+          this.dataService.deleteUser(userform.userId).subscribe(() => {
+            this.users = this.users.filter(user => user._id !== userform.userId);
+          });
+        }
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  }
+  private _reloadUsers(): void {
+    this.dataService.getUsers().subscribe(data => {
+      this.users = data;
+    });
+  }
   ngOnInit(): void {
+    this._reloadUsers();
   }
 }
 

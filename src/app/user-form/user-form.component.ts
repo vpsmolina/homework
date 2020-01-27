@@ -1,8 +1,12 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from "@angular/core";
 import { FormControl, FormGroup, ValidationErrors, Validators } from "@angular/forms";
-import { UserFormValue } from "../models/user-form-value.model";
-import { USERS } from "../users/datatable";
-import { User } from "../users/user";
+import { ActivatedRoute, Router } from "@angular/router";
+import { DataService } from "../data-table/data.service";
+import { User } from "../data-table/user";
+import { UserData } from "../data-table/userdata";
+import { UserEvents } from "../data-table/userevents";
+import { UsersService } from "../data-table/users.service";
+
 
 @Component({
   selector: "app-user-form",
@@ -12,46 +16,68 @@ import { User } from "../users/user";
 })
 
 
-export class UserFormComponent implements OnInit, OnChanges {
+export class UserFormComponent implements OnInit {
+  public formUser: FormGroup;
+  public title: string;
+  public userId: string;
+  public target = " ";
+  public action: Number;
+  public piece: string;
+  public count: number;
+  public currentDate = new Date().getFullYear() - 10;
+  public confirm: boolean = false;
+  public data: User = {birthday: undefined, name: "", id: 0, surname: "", middleName: "", coefficient: 0};
 
-  public users = USERS;
-  @Input() index: number;
-  @Input() title: string;
-  @Input() target = " ";
-  @Input()
-  set indexElement(index: number) {
-    this.index = index;
+  constructor(@Inject(DataService) private dataService: UserData,
+              private router: Router, private activatedRoute: ActivatedRoute,
+              private usersService: UsersService,
+              ) {}
+
+  public convertDate(date: Date): string {
+    const cDate = new Date(date);
+    const month = cDate.getMonth() + 1;
+    const stMonth: string = (month < 10) ? "0" + month : month.toString();
+    const stDay: string = (cDate.getDate() < 10) ? "0"  + cDate.getDate() : cDate.getDate().toString();
+    return cDate.getFullYear() + "-" + stMonth + "-" + stDay;
   }
 
-
-  fullNameControl = new FormGroup({
-    fullName: new FormGroup({
-      name: new FormControl(null, [Validators.required]),
-      surname: new FormControl(null, [Validators.required]),
-      middleName: new FormControl(null, [Validators.required]),
-    }),
-    birthday: new FormControl(null, [Validators.required, this.dateValidator]),
-    coefficient: new FormControl(null, [Validators.required]),
-  });
-
-  public onSubmit(): void {
-    const controls = this.fullNameControl.controls;
-    if (this.fullNameControl.invalid) {
-      Object.keys(controls).forEach(controlName => controls[controlName].markAsTouched());
-    } else {
-      this.users.push(this.convertFormData(this.fullNameControl.value));
+  public initAddUserForm(): void {
+    this.formUser = new FormGroup({
+      fullName: new FormGroup({
+        surname: new FormControl(null, [Validators.required]),
+        name: new FormControl(null, [Validators.required]),
+        middleName: new FormControl(null, [Validators.required]),
+      }),
+      birthday: new FormControl(null, [Validators.required, this.dateValidator]),
+      coefficient: new FormControl(null, [Validators.required]),
+    });
+    this.dataService.getCountUsers().subscribe(num => this.count = +num);
     }
+  public initEditUserForm(): void {
+    this.formUser = new FormGroup({
+      fullName: new FormGroup({
+        surname: new FormControl(null, [Validators.required]),
+        name: new FormControl(null, [Validators.required]),
+        middleName: new FormControl(null, [Validators.required])
+      }),
+      birthday: new FormControl(null, [Validators.required, this.dateValidator]),
+      coefficient: new FormControl(null, [Validators.required]),
+    });
+    this.dataService.getUserById(this.userId).subscribe((user) => {
+      const editUser = {
+        fullName: {
+          surname: user[0].surname,
+          name: user[0].name,
+          middleName: user[0].middleName
+        },
+        birthday: this.convertDate(new Date(user[0].birthday)),
+        coefficient: user[0].coefficient
+      };
+      this.data.id = user[0].id;
+      this.data._id = user[0]._id;
+      this.formUser.setValue(editUser);
+    });
   }
-  public editUsers(users: User, index: number): void {
-    this.users[index] = users;
-  }
-
-  @Output() public editUser(index: number): void {
-    console.log(this.target);
-    this.editUsers(this.convertFormData(this.fullNameControl.value), index);
-  }
-
-
 
   public dateValidator (formControl: FormControl): FormControl | ValidationErrors {
     if (formControl.value) {
@@ -63,27 +89,71 @@ export class UserFormComponent implements OnInit, OnChanges {
       return null;
     }
   }
-  @Output()
-  // tslint:disable-next-line:typedef
-  public convertFormData (formValue: UserFormValue) {
-    return {
-      ...formValue,
-      id: Math.floor(Math.random() * Math.random()),
-      name: formValue.fullName.name,
-      middleName: formValue.fullName.middleName,
-      surname: formValue.fullName.surname
-    };
+  public onSubmit(): boolean {
+    const controls = this.formUser.controls;
+    if (this.formUser.invalid) {
+      Object.keys(controls).forEach(controlName => controls[controlName].markAsTouched());
+      return false;
+    }
+    if (this.action === 1) {
+      if (this.usersService.debug()) {
+        this.data._id = "id00000" + this.count;
+      }
+      this.data.id = this.count + 1;
+      this.data.birthday = new Date(this.formUser.value.birthday);
+      this.data.surname = this.formUser.value.fullName.surname;
+      this.data.name = this.formUser.value.fullName.name;
+      this.data.middleName = this.formUser.value.fullName.middleName;
+      this.data.coefficient = this.formUser.value.coefficient;
+      this.hideForm();
+      this.confirm = true;
+    }
+    this.data.birthday = new Date(this.formUser.value.birthday);
+    this.data.surname = this.formUser.value.fullName.surname;
+    this.data.name = this.formUser.value.fullName.name;
+    this.data.middleName = this.formUser.value.fullName.middleName;
+    this.data.coefficient = this.formUser.value.coefficient;
+    this.hideForm();
+    this.confirm = true;
   }
-  ngOnInit(): void {
+  public hideForm(): void {
+    this.usersService.debug() ? this.router.navigate([""], {queryParams: {debug: true}}) : this.router.navigate([""]);
+    this.confirm = false;
   }
-
-  ngOnChanges(): void {
-    if (this.index) {
-      this.fullNameControl.get("fullName").get("name").setValue(this.users[this.index].name);
-      this.fullNameControl.get("fullName").get("surname").setValue(this.users[this.index].surname);
-      this.fullNameControl.get("fullName").get("middleName").setValue(this.users[this.index].middleName);
-      this.fullNameControl.get("birthday").setValue(this.users[this.index].birthday);
-      this.fullNameControl.get("coefficient").setValue(this.users[this.index].coefficient);
+  public confirmation(): void {
+    this.confirm = !this.confirm;
+    this.usersService.debug() ? this.router.navigate([""], {queryParams: {debug: true}}) : this.router.navigate([""]);
+  }
+  private _action(piece: string): void {
+    switch (UserEvents[piece]) {
+      case 1: {
+        this.title = "Add new student";
+        this.action = 1;
+        this.initAddUserForm();
+        break;
+      }
+      case 2: {
+        this.title = "Edit";
+        this.action = 2;
+        this.activatedRoute.params.subscribe(param => this.userId = param.id);
+        this.initEditUserForm();
+        break;
+      }
+      case 0: {
+        this.title = "Confirmation";
+        this.action = 0;
+        this.activatedRoute.params.subscribe(param => this.userId = param.id);
+        this.initEditUserForm();
+        break;
+      }
+      default: {
+        break;
+      }
     }
   }
+  ngOnInit(): void {
+    this.piece = this.activatedRoute.snapshot.url[0].path;
+    this._action(this.piece);
+  }
+
 }
