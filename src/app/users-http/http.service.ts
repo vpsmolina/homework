@@ -8,8 +8,8 @@ import { User } from "../data-table/user";
 export class HttpService {
   public users: User[] = [];
 
-  // tslint:disable-next-line:no-any
-  constructor(private http: HttpClient, noticeService: any) {}
+
+  constructor(private http: HttpClient) {}
 
   getData(): Observable<User[]> {
     return this.http.get<User[]>("users.json")

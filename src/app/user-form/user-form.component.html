@@ -19,19 +19,19 @@
             <div class="form-control">
               <label> Name</label>
                 <input fullName="name" formControlName="name"
-                       type="string"
-                >
+                       type="string">
+
             </div>
             <div class="form-control">
               <label> Middle name</label>
                 <input fullName="middleName" formControlName="middleName"
-                       type="string"
-                >
+                       type="string">
             </div>
             <div class="validtext"
                  *ngIf="formUser.controls['fullName'].invalid && formUser.controls['fullName'].touched">
-              No full name.
+              The data entered must be different.
             </div>
+
           </div>
 
           <div class="form-control">
@@ -56,7 +56,8 @@
 
           <button class="transparent-button"
                   routerLink="/">Back</button>
-          <button class="transparent-button" type="submit">Add User</button>
+          <button class="transparent-button" *ngIf="action===1" type="submit">Add User</button>
+          <button class="transparent-button" *ngIf="action===2"type="submit">Edit User</button>
         </form>
         <ng-template #confirm>
           <p>Are you sure you want to delete?</p>

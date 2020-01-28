@@ -47,7 +47,7 @@ export class UserFormComponent implements OnInit {
         surname: new FormControl(null, [Validators.required]),
         name: new FormControl(null, [Validators.required]),
         middleName: new FormControl(null, [Validators.required]),
-      }),
+      }, {validators: this.nameValidator}),
       birthday: new FormControl(null, [Validators.required, this.dateValidator]),
       coefficient: new FormControl(null, [Validators.required, Validators.pattern("[0-9]")] ),
     });
@@ -59,7 +59,7 @@ export class UserFormComponent implements OnInit {
         surname: new FormControl(null, [Validators.required]),
         name: new FormControl(null, [Validators.required]),
         middleName: new FormControl(null, [Validators.required])
-      }),
+      }, {validators: this.nameValidator}),
       birthday: new FormControl(null, [Validators.required, this.dateValidator]),
       coefficient: new FormControl(null, [Validators.required, Validators.pattern("[0-9]")]),
     });
@@ -87,6 +87,16 @@ export class UserFormComponent implements OnInit {
         return {dateValidator: {message: "The student must be over 10 years old."}};
       }
       return null;
+    }
+  }
+  public nameValidator (formGroup: FormGroup): FormControl | ValidationErrors {
+    if (formGroup.value) {
+      const enterSurname = formGroup.value.surname;
+      const enterName = formGroup.value.name;
+      const enterMiddleName = formGroup.value.middleName;
+      if (enterSurname === enterName || enterSurname === enterMiddleName || enterName === enterMiddleName) {
+        return {nameValidator: {message: "The data entered must be different."}};
+      }
     }
   }
   public onSubmit(): boolean {
