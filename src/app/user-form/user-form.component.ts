@@ -49,7 +49,7 @@ export class UserFormComponent implements OnInit {
         middleName: new FormControl(null, [Validators.required]),
       }),
       birthday: new FormControl(null, [Validators.required, this.dateValidator]),
-      coefficient: new FormControl(null, [Validators.required]),
+      coefficient: new FormControl(null, [Validators.required, Validators.pattern("[0-9]")] ),
     });
     this.dataService.getCountUsers().subscribe(num => this.count = +num);
     }
@@ -61,7 +61,7 @@ export class UserFormComponent implements OnInit {
         middleName: new FormControl(null, [Validators.required])
       }),
       birthday: new FormControl(null, [Validators.required, this.dateValidator]),
-      coefficient: new FormControl(null, [Validators.required]),
+      coefficient: new FormControl(null, [Validators.required, Validators.pattern("[0-9]")]),
     });
     this.dataService.getUserById(this.userId).subscribe((user) => {
       const editUser = {
@@ -84,7 +84,7 @@ export class UserFormComponent implements OnInit {
       const nday = new Date;
       const bday = new Date(formControl.value);
       if ((bday.getFullYear()) > (nday.getFullYear() - 10)) {
-        return {dateValidator: {message: "Не младше десяти лет"}};
+        return {dateValidator: {message: "The student must be over 10 years old."}};
       }
       return null;
     }
