@@ -28,7 +28,7 @@
                        type="string"
                 >
             </div>
-            <div class="tooltiptext"
+            <div class="validtext"
                  *ngIf="formUser.controls['fullName'].invalid && formUser.controls['fullName'].touched">
               No full name.
             </div>
@@ -38,7 +38,7 @@
             <label>Birthday</label>
               <input formControlName="birthday"
                      type="date">
-            <div class="tooltiptext"
+            <div class="validtext"
                  *ngIf="formUser.controls['birthday'].invalid && formUser.controls['birthday'].touched">
               The student must be over 10 years old.
             </div>
@@ -48,7 +48,7 @@
             <label>Coefficient </label>
               <input formControlName="coefficient"
                      type="number">
-            <div class="tooltiptext"
+            <div class="validtext"
                  *ngIf="formUser.controls['coefficient'].invalid && formUser.controls['coefficient'].touched">
               Not specified coefficient.
             </div>
