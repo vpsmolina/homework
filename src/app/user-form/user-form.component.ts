@@ -24,14 +24,13 @@ export class UserFormComponent implements OnInit {
   public action: Number;
   public piece: string;
   public count: number;
-  public currentDate = new Date().getFullYear() - 10;
+ /* public currentDate = new Date().getFullYear() - 10;*/
   public confirm: boolean = false;
   public data: User = {birthday: undefined, name: "", id: 0, surname: "", middleName: "", coefficient: 0};
 
   constructor(@Inject(DataService) private dataService: UserData,
               private router: Router, private activatedRoute: ActivatedRoute,
-              private usersService: UsersService,
-              ) {}
+              private usersService: UsersService) {}
 
   public convertDate(date: Date): string {
     const cDate = new Date(date);
@@ -40,7 +39,6 @@ export class UserFormComponent implements OnInit {
     const stDay: string = (cDate.getDate() < 10) ? "0"  + cDate.getDate() : cDate.getDate().toString();
     return cDate.getFullYear() + "-" + stMonth + "-" + stDay;
   }
-
   public initAddUserForm(): void {
     this.formUser = new FormGroup({
       fullName: new FormGroup({
@@ -130,7 +128,7 @@ export class UserFormComponent implements OnInit {
     this.usersService.debug() ? this.router.navigate([""], {queryParams: {debug: true}}) : this.router.navigate([""]);
     this.confirm = false;
   }
-  public confirmation(): void {
+  public confirmForm(): void {
     this.confirm = !this.confirm;
     this.usersService.debug() ? this.router.navigate([""], {queryParams: {debug: true}}) : this.router.navigate([""]);
   }
