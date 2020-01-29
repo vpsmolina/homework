@@ -4,33 +4,37 @@
     {{title}}
   </div>
 </div>
-<div class="users__filter">
-  <label>
-    <input type="text" placeholder="Enter surname" [(ngModel)]="searchName">
-  </label>
+<div class="header">
+  <div class="users__filter">
+    <label>
+      <input type="text" placeholder="Enter surname" [(ngModel)]="searchName">
+    </label>
+  </div>
+  <button class="transparent-button" (click)="addUser()">Add User</button>
+  <!--<button class="button-off" (click)="off()">Off</button>-->
 </div>
 
 <div class="users__table">
   <div class="users__table-header">
     <div class="users__table-header-column">
-    <button class="users__sort-button" (click)="sortUser('surname')" ></button>
-      Surname
+    <button class="users__sort-button" (click)="sortUser('surname')" >Surname</button>
+
     </div>
     <div class="users__table-header-column">
-      <button class="users__sort-button" (click)="sortUser('name')" ></button>
-      Name
+      <button class="users__sort-button" (click)="sortUser('name')" >Name</button>
+
     </div>
     <div class="users__table-header-column">
-      <button class="users__sort-button" (click)="sortUser('middleName')" ></button>
-      Middle name
+      <button class="users__sort-button" (click)="sortUser('middleName')" >Middle name</button>
+
     </div>
     <div class="users__table-header-column">
-      <button class="users__sort-button" (click)="sortUser('birthday')" ></button>
-      Birthday
+      <button class="users__sort-button" (click)="sortUser('birthday')" >Birthday</button>
+
     </div>
     <div class="users__table-header-column">
-      <button class="users__sort-button" (click)="sortUser('coefficient')" ></button>
-      Coefficient
+      <button class="users__sort-button" (click)="sortUser('coefficient')" >Coefficient</button>
+
     </div>
     <div class="users__table-header-column"></div>
   </div>
@@ -64,7 +68,6 @@
       </div>
     </div>
   </div>
-  <button class="transparent-button" (click)="addUser()">Add User</button>
 <!--  <button class="transparent-button" type="submit"
           routerLink="/add">Добавить</button>-->
 </div>
